@@ -21,6 +21,9 @@ class Nodo{
         void print_dato(){
             cout<<dato<<"->";
         }
+	T get_dato(){
+            return dato;
+        }
 };
 
 template <class T>
@@ -89,6 +92,20 @@ class linked_list{
             }
             cout<<endl;
         }
+	
+        void buscar(T dato){
+            bool b=false;
+            Nodo<T> *temp=head;
+            for(int i=0; i<size; i++){
+                if(temp->get_dato()==dato){
+                    cout<<"El dato "<<dato<<" esta en la lista "<<"en la posicion "<<i+1<<endl;
+                    b=true;
+                    break;
+                }
+                 temp=temp->next;
+            }
+            if(b==false) cout<<"El dato no esta en la lista"<<endl;
+        }		
 
         void delete_all(){
             head->eliminar_todo();
@@ -160,10 +177,12 @@ int main(){
     }
     list_3.print();
     cout<<endl;
-    cout<<"Se elimina la lista"<<endl;
+    cout<<"Se elimina la lista 2"<<endl;
     list_2.delete_all();
     list_2.print();
-
+    cout<<"Buscar un dato en la lista 3"<<endl;
+    cin>>cad;
+    list_3.buscar(cad);	
     return 0;
 }
 
