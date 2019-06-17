@@ -1,13 +1,19 @@
 #include<iostream>
 #include<string>
+
 using namespace std;
 
 template <class T>
+class _iterator;
 
+template <class T>
+class linked_list;
+
+template <class T>
 class Nodo{
     T dato;
+    Nodo *next;
     public:
-        Nodo *next;
         Nodo(T dato){
             this->dato=dato;
             next=NULL;
@@ -21,15 +27,45 @@ class Nodo{
         void print_dato(){
             cout<<dato<<"->";
         }
-	T get_dato(){
+	    T get_dato(){
             return dato;
         }
+        friend class linked_list<T>;
+        friend class _iterator<T>;
+};
+
+template <class T>
+
+class _iterator{
+    Nodo<T> * it;
+    int posicion;
+    public:
+        _iterator(Nodo<T>* nodo){
+            it=nodo;
+        }
+
+        bool estado(){
+            return (it!=NULL);
+        }
+
+        Nodo<T>* next(){
+            Nodo<T> * aux;
+            if(estado()){
+                aux=it;
+                it=it->next;
+                return aux; 
+            return NULL;        
+            }
+        }
+    friend class linked_list<T>;    
+
 };
 
 template <class T>
 
 class linked_list{
-    Nodo<T> *head; 
+    Nodo<T> * head; 
+    _iterator<T>* itr;
     int size;
 
     public:
@@ -60,7 +96,7 @@ class linked_list{
                         while (temp->next != NULL) {
                             temp = temp->next;
                         }
-                        }
+                        }    
                     size++;
                 }   
                 else{
@@ -75,20 +111,24 @@ class linked_list{
                     size++;
                 }
             }
+            itr=new _iterator<T>(head);
         }
 
         void print(){
             Nodo<T> *temp = head;
-            if(!head){
-                cout<<"La lista esta vacia"<<endl;
+            if(temp==NULL){
+                
             }
 
             else{
-                while(temp){
-                    temp->print_dato();
-                    if(!temp->next){cout<<"NULL";}
-                    temp=temp->next;
+                for(int i=0;i<size;i++){
+                    if(temp!=NULL){
+                        temp->print_dato();
+                        temp=temp->next;
+                    }
+                    else cout<<"NULL"<<endl;
                 }
+                
             }
             cout<<endl;
         }
@@ -110,6 +150,43 @@ class linked_list{
         void delete_all(){
             head->eliminar_todo();
             size=0;
+        }
+
+        _iterator<T>* get_iterador(){
+            return itr;
+        }
+        
+        Nodo<T>* obtener(int n){
+            itr->it=head;
+            Nodo<T> * aux;
+            for(int i=0;i<n;i++){
+                aux=itr->next();
+            }
+            return aux;
+        }
+
+        void eliminar_pos(int pos){
+            Nodo<T> *temp;
+            if(pos!=size && size>pos){
+                temp=this->obtener(pos-1);
+                temp->next=this->obtener(pos+1);
+
+                this->obtener(pos)->next=NULL;
+                delete this->obtener(pos);
+                size--;
+            }
+
+            else {
+                if(pos==1){
+                    head=obtener(pos+1);
+                    delete obtener(pos);
+                    size--;
+                }   
+                else{
+                    delete obtener(pos);
+                    size--;
+                }
+            }
         }
 };
 
@@ -147,6 +224,7 @@ istream& operator>>(istream& is, point& punto){
 }
 
 int main(){
+    
     cout<<"Lista de puntos"<<endl;
     linked_list<point> list_1;
     point pt;
@@ -177,12 +255,17 @@ int main(){
     }
     list_3.print();
     cout<<endl;
-    cout<<"Se elimina la lista 2"<<endl;
-    list_2.delete_all();
+    //cout<<"Se elimina el segundo elemento de la lista 2"<<endl;
+    //list_2.eliminar_pos(2);
     list_2.print();
     cout<<"Buscar un dato en la lista 3"<<endl;
     cin>>cad;
-    list_3.buscar(cad);	
+    list_3.buscar(cad);
+    cout<<"Iterador"<<endl;
+    _iterator<string>* it = list_3.get_iterador(); 
+    list_3.obtener(1)->print_dato();
+    list_3.obtener(3)->print_dato();
+
     return 0;
 }
 
