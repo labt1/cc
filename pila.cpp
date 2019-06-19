@@ -234,7 +234,7 @@ int main(){
     cout<<endl;
     pila.size();cout<<endl;
     pila.show();cout<<endl;
-    cout<<"Funcion pop elimina: el ultimo elemnto LIFO"<<endl;
+    cout<<"Funcion pop elimina: el ultimo elemento LIFO"<<endl;
     pila.pop();cout<<endl;
     pila.size();cout<<endl;
     pila.show();
